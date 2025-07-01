@@ -21,6 +21,9 @@ const handler = NextAuth({
           });
 
           if (user) {
+            console.log("credentials.password:", credentials.password);
+            console.log("user.password (do banco):", user.password);
+
             const isPasswordCorrect = await bcrypt.compare(
               credentials.password,
               user.password
@@ -51,7 +54,6 @@ const handler = NextAuth({
   pages: {
     error: "/dashboard/login",
   },
-
 });
 
 export { handler as GET, handler as POST };

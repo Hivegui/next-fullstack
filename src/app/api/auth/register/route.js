@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connect from "@/utils/db";
 import User from "@/models/User";
+import bcrypt from "bcryptjs"; // <- Adicionado
 
 export const POST = async (request) => {
   try {
@@ -15,10 +16,13 @@ export const POST = async (request) => {
       return new NextResponse("Usuário já existe", { status: 400 });
     }
 
+    // Criptografa a senha antes de salvar
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = new User({
       name,
       email,
-      password,
+      password: hashedPassword,
     });
 
     await newUser.save();

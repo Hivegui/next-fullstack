@@ -18,16 +18,15 @@ const Register = () => {
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
           email,
           password,
         }),
       });
-      res.status === 201 && router.push("/dashboard/login?success=Account has been created");
+      res.status === 201 &&
+        router.push("/dashboard/login?success=Account has been created");
     } catch (err) {
       setError(err);
       console.log(err);
@@ -58,7 +57,9 @@ const Register = () => {
           className={styles.input}
         />
         <button className={styles.button}>Register</button>
-        {error && "Something went wrong!"}
+        {error && (
+          <p className={styles.error}>Erro ao registrar. Tente novamente.</p>
+        )}
       </form>
       <span className={styles.or}>- OR -</span>
       <Link className={styles.link} href="/dashboard/login">

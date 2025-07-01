@@ -9,16 +9,14 @@ async function getData(id) {
   });
 
   if (!res.ok) {
-    return notFound()
+    throw new Error("Post não encontrado");
   }
 
   return res.json();
 }
 
-
 export async function generateMetadata({ params }) {
-
-  const post = await getData(params.id)
+  const post = await getData(params.id);
   return {
     title: post.title,
     description: post.desc,
@@ -26,15 +24,19 @@ export async function generateMetadata({ params }) {
 }
 
 const BlogPost = async ({ params }) => {
-  const data = await getData(params.id);
+  let data;
+
+  try {
+    data = await getData(params.id);
+  } catch (err) {
+    return notFound(); 
+  }
   return (
     <div className={styles.container}>
       <div className={styles.top}>
         <div className={styles.info}>
           <h1 className={styles.title}>{data.title}</h1>
-          <p className={styles.desc}>
-            {data.desc}
-          </p>
+          <p className={styles.desc}>{data.desc}</p>
           <div className={styles.author}>
             <Image
               src={data.img}
@@ -47,18 +49,11 @@ const BlogPost = async ({ params }) => {
           </div>
         </div>
         <div className={styles.imageContainer}>
-          <Image
-            src={data.img}
-            alt=""
-            fill={true}
-            className={styles.image}
-          />
+          <Image src={data.img} alt="" fill={true} className={styles.image} />
         </div>
       </div>
       <div className={styles.content}>
-        <p className={styles.text}>
-         {data.content}
-        </p>
+        <p className={styles.text}>{data.content}</p>
       </div>
     </div>
   );
